@@ -1,22 +1,39 @@
 import React, { useContext, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { userContext } from "../../Context/userContext";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 export default function NavBar() {
   const [Open, setOpen] = useState(false);
   let navigate = useNavigate();
   let { userLogin, setuserLogin } = useContext(userContext);
   function changeControl() {
-    if (Open) {
-      setOpen(false);
-    } else {
-      setOpen(true);
-    }
+    setOpen(!Open);
   }
   function signOut() {
     localStorage.removeItem("userToken");
     setuserLogin(null);
     navigate("/login");
+  }
+  function getUserInfo() {
+    return axios.get(`https://linked-posts.routemisr.com/users/profile-data`, {
+      headers: {
+        token: localStorage.getItem("userToken"),
+      },
+    });
+  }
+  let { data, error, isError} = useQuery({
+    queryKey: "userprofile",
+    queryFn: getUserInfo,
+    select: (data) => data?.data?.user,
+  });
+  console.log(data?.data?.user);
+
+  if (isError) {
+    return (
+      <h2 className=" text-4xl text-center text-[#520B05]">{error.message}</h2>
+    );
   }
   return (
     <>
@@ -38,8 +55,8 @@ export default function NavBar() {
             {userLogin ? (
               <div className=" relative inline-block">
                 <button
-                  type="button"
-                  onClick={() => changeControl()}
+
+                  onClick={changeControl}
                   className="flex text-sm  bg-amber-50 w-8 h-8 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                   id="user-menu-button"
                   aria-expanded="false"
@@ -47,20 +64,11 @@ export default function NavBar() {
                   data-dropdown-placement="bottom"
                 >
                   <span className="sr-only">Open user menu</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    className=" h-8 w-8 rounded-full"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                    />
-                  </svg>
+                  <img
+                    src={data?.photo}
+                    alt={data?.name}
+                    className=" rounded-[50%]"
+                  />
                 </button>
                 {/* Dropdown menu */}
                 <div
@@ -68,20 +76,21 @@ export default function NavBar() {
                   id="user-dropdown"
                 >
                   {Open ? (
-                    <div className=" absolute right-0   text-base list-none text-[#520B05] bg-[#F65606] divide-y divide-gray-100 rounded-lg shadow-sm">
+                    <div className=" absolute right-0   text-base list-none text-white bg-[#520B05] divide-y divide-gray-100 rounded-lg shadow-sm">
                       <div className="px-4 py-3">
-                        <span className="block text-sm text-gray-900 dark:text-white">
-                          Bonnie Green
+                        <span className="block text-sm  dark:text-white">
+                          {data?.name}{" "}
                         </span>
-                        <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                          name@flowbite.com
+                        <span className="block text-sm  truncate dark:text-gray-400">
+                          {data?.email}
                         </span>
                       </div>
                       <ul className="py-2" aria-labelledby="user-menu-button">
                         <li>
                           <NavLink
                             to={"/profile"}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                            onClick={()=>setOpen(false)}
+                            className="block px-4 py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                           >
                             Profile
                           </NavLink>
@@ -89,7 +98,7 @@ export default function NavBar() {
                         <li>
                           <span
                             onClick={signOut}
-                            className="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                            className="block cursor-pointer px-4 py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                           >
                             Sign Out
                           </span>

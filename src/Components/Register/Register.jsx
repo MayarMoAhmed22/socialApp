@@ -10,7 +10,7 @@ const schema = z
     name: z
       .string()
       .min(1, "Name is required")
-      .max(10, "Max length is 10 characters"),
+      .max(20, "Max length is 20 characters"),
     email: z.string().email("Invalid email"),
     password: z
       .string()
