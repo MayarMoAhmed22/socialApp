@@ -3,7 +3,7 @@ import "./PostDetails.module.css";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import Comment from "../comment";
+import Comment from "./../Comment";
 
 export default function PostDetails() {
   const [expanded, setExpanded] = useState(false);
@@ -23,7 +23,7 @@ export default function PostDetails() {
 
   if (isError) return <p>{error.message}</p>;
   if (!data) {
-    return  <span className="loader py-50"></span>;;
+    return <span className="loader py-50"></span>;
   }
   const text = data?.body ?? "";
   const words = text.trim().split(/\s+/);

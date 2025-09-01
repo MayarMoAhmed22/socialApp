@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import Comment from "../comment";
+import Comment from "./../Comment";
 import { Link } from "react-router-dom";
 import AddComment from "../AddComment/AddComment";
 import style from "./Home.module.css";
