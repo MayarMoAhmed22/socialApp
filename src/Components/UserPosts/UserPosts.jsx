@@ -5,7 +5,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import AddComment from "../AddComment/AddComment";
 import style from "./UserPosts.module.css";
-import Comment from "../comment";
+import Comment from "./../Comment";
 import UpdatePosts from "../UpdatePost/UpdatePosts";
 import toast from "react-hot-toast";
 
