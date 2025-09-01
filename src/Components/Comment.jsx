@@ -2,10 +2,11 @@ import { useState } from "react";
 import EditComment from "./EditComment/EditComment";
 import toast from "react-hot-toast";
 import axios from "axios";
-
+import { useQueryClient } from "@tanstack/react-query";
 export default function Comment({ comment }) {
   const [openMenu, setOpenMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  let queryclient = useQueryClient();
   console.log(comment);
 
   if (!comment) return null;
@@ -25,6 +26,8 @@ export default function Comment({ comment }) {
       .then((res) => {
         console.log(res);
         toast.success("Post deleted successfully");
+        queryclient.invalidateQueries({ queryKey: ["userPosts"] });
+        queryclient.invalidateQueries({ queryKey: ["singlePost"] });
       })
       .catch((err) => {
         console.log(err);

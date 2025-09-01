@@ -14,7 +14,7 @@ export default function EditComment({ id, onClose }) {
     axios
       .put(`https://linked-posts.routemisr.com/comments/${id}`, values, {
         headers: {
-          token: localStorage.getItem("singlePost"),
+          token: localStorage.getItem("userToken"),
         },
       })
       .then((res) => {
@@ -23,6 +23,7 @@ export default function EditComment({ id, onClose }) {
         toast.success("Updated successfully");
         onClose(); // close after saving
         queryclient.invalidateQueries({ queryKey: ["userPosts"] });
+        queryclient.invalidateQueries({queryKey:['singlePost']})
       })
       .catch((err) => {
         console.log(err);
