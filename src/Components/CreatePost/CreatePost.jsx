@@ -4,21 +4,37 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+
 export default function CreatePost() {
-  let form = useForm({
+  const form = useForm({
     defaultValues: {
       body: "",
       image: "",
     },
   });
-  let { register, handleSubmit } = form;
-  async function handleCrestePost(values) {
+
+  const { register, handleSubmit, reset } = form;
+
+  async function handleCreatePost(values) {
     let myData = new FormData();
-    myData.append("body", values.body);
-    myData.append("image", values.image[0]);
+
+ 
+    if (values.body && values.body.trim() !== "") {
+      myData.append("body", values.body);
+    }
+
+    if (values.image && values.image.length > 0) {
+      myData.append("image", values.image[0]);
+    }
+
+
+    if (!myData.has("body") && !myData.has("image")) {
+      toast.error("You must provide text or an image");
+      return;
+    }
 
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `https://linked-posts.routemisr.com/posts`,
         myData,
         {
@@ -30,12 +46,14 @@ export default function CreatePost() {
 
       if (response.data.message === "success") {
         toast.success("Post created successfully");
+        reset(); // ✅ clear input fields
       }
     } catch (err) {
       console.log(err);
-      toast.error(err.response.data.error);
+      toast.error(err.response?.data?.error || "Something went wrong");
     }
   }
+
   function getUserInfo() {
     return axios.get(`https://linked-posts.routemisr.com/users/profile-data`, {
       headers: {
@@ -43,58 +61,63 @@ export default function CreatePost() {
       },
     });
   }
-  let { data, error, isError, isLoading } = useQuery({
+
+  const { data, error, isError, isLoading } = useQuery({
     queryKey: "userprofile",
     queryFn: getUserInfo,
     select: (data) => data?.data?.user,
   });
-  console.log(data?.data?.user);
+
   if (isLoading) {
     return <span className="loader py-50"></span>;
   }
+
   if (isError) {
     return (
-      <h2 className=" text-4xl text-center text-[#520B05]">{error.message}</h2>
+      <h2 className="text-4xl text-center text-[#520B05]">{error.message}</h2>
     );
   }
+
   return (
-    <div className=" w-full mt-10  lg:w-[48%] md:w-[70%] mx-auto ">
+    <div className="w-full mt-10 lg:w-[48%] md:w-[70%] mx-auto">
       <form
-        onSubmit={handleSubmit(handleCrestePost)}
-        className="flex  items-center p-2 w-[100%] max-w-md"
+        onSubmit={handleSubmit(handleCreatePost)}
+        className="flex items-center p-2 w-full max-w-md gap-2"
       >
         <img
           src={data?.photo}
           alt={data?.name}
-          className=" w-10 mr-2 h-10 rounded-full object-cover"
+          className="w-10 h-10 rounded-full object-cover"
         />
-        <div>
-          <input
-            type="text"
-            {...register("body")}
-            id="body"
-            className="pr-18 md:pr-50 lg:pr-80 outline-none rounded-xl  border-slate-500"
-            placeholder="what's on your mind"
-          />
-        </div>
-        <div>
-          <label htmlFor="photo">
-            {" "}
-            <i className=" fa-solid p-1 fa-image fa-2xl"></i>
-          </label>
-          <input
-            {...register("image")}
-            type="file"
-            id="photo"
-            className="hidden"
-          />
-        </div>
-        <div className="flex justify-end items-center">
-          <button className=" p-2  text-[#520B05] outline-1 outline-[#520B05]  py-1.5  border-none  rounded-l ">
-            {" "}
-            post
-          </button>
-        </div>
+
+        {/* Text input */}
+        <input
+          type="text"
+          {...register("body")}
+          id="body"
+          className="flex-1 px-2 outline-none rounded-xl border border-slate-500"
+          placeholder="What's on your mind?"
+        />
+
+        {/* Image upload */}
+        <label htmlFor="photo" className="cursor-pointer">
+          <i className="fa-solid fa-image fa-xl p-1"></i>
+        </label>
+        <input
+          {...register("image")}
+          type="file"
+          id="photo"
+          accept="image/*"
+          className="hidden"
+        />
+
+        {/* Post button */}
+        <button
+          type="submit"
+          className="p-2 text-[#520B05] border rounded-lg hover:bg-[#520B05]/10"
+        >
+          Post
+        </button>
       </form>
     </div>
   );
