@@ -6,12 +6,13 @@ import { Link } from "react-router-dom";
 import AddComment from "../AddComment/AddComment";
 import style from "./Home.module.css";
 import CreatePost from "../CreatePost/CreatePost";
+import Cookies from "js-cookie";
 export default function Home() {
   const [expanded, setExpanded] = useState(false);
   function getAllPosts() {
     return axios.get(`https://linked-posts.routemisr.com/posts?limit=50`, {
       headers: {
-        token: localStorage.getItem("userToken"),
+        token: Cookies.get("userToken"),
       },
     });
   }
@@ -35,7 +36,6 @@ export default function Home() {
     <>
       <CreatePost />
       {data.map((post) => {
-
         const words = post.body?.split(" ") || [];
         const wordLimit = 10;
         const shortText = words.slice(0, wordLimit).join(" ");

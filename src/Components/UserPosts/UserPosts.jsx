@@ -8,7 +8,7 @@ import style from "./UserPosts.module.css";
 import Comment from "./../Comment";
 import UpdatePosts from "../UpdatePost/UpdatePosts";
 import toast from "react-hot-toast";
-
+import Cookies from "js-cookie";
 export default function UserPosts({ id }) {
   const [expanded, setExpanded] = useState(false);
   const [editingPostId, setEditingPostId] = useState(null);
@@ -19,7 +19,7 @@ export default function UserPosts({ id }) {
   function deletePost(postId) {
     axios
       .delete(`https://linked-posts.routemisr.com/posts/${postId}`, {
-        headers: { token: localStorage.getItem("userToken") },
+        headers: { token: Cookies.get("userToken") },
       })
       .then((res) => {
         console.log(res);

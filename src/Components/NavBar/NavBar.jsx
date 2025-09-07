@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { userContext } from "../../Context/userContext";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-
+import Cookies from "js-cookie";
 export default function NavBar() {
   const [Open, setOpen] = useState(false);
   let navigate = useNavigate();
@@ -12,18 +12,18 @@ export default function NavBar() {
     setOpen(!Open);
   }
   function signOut() {
-    localStorage.removeItem("userToken");
+    Cookies.remove("userToken");
     setuserLogin(null);
     navigate("/login");
   }
   function getUserInfo() {
     return axios.get(`https://linked-posts.routemisr.com/users/profile-data`, {
       headers: {
-        token: localStorage.getItem("userToken"),
+        token:  Cookies.get("userToken"),
       },
     });
   }
-  let { data, error, isError} = useQuery({
+  let { data, error, isError } = useQuery({
     queryKey: "userprofile",
     queryFn: getUserInfo,
     select: (data) => data?.data?.user,
@@ -55,7 +55,6 @@ export default function NavBar() {
             {userLogin ? (
               <div className=" relative inline-block">
                 <button
-
                   onClick={changeControl}
                   className="flex text-sm  bg-amber-50 w-8 h-8 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                   id="user-menu-button"
@@ -89,7 +88,7 @@ export default function NavBar() {
                         <li>
                           <NavLink
                             to={"/profile"}
-                            onClick={()=>setOpen(false)}
+                            onClick={() => setOpen(false)}
                             className="block px-4 py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                           >
                             Profile

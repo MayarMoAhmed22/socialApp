@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRef} from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-
+import Cookies from "js-cookie";
 export default function UpdatePosts({ onClose, postId }) {
   let queryclient = useQueryClient();
   const userfileInput = useRef();
@@ -48,7 +48,7 @@ export default function UpdatePosts({ onClose, postId }) {
     axios
       .put(`https://linked-posts.routemisr.com/posts/${postId}`, newData, {
         headers: {
-          token: localStorage.getItem("userToken"),
+          token: Cookies.get("userToken") ,
           "Content-Type": "multipart/form-data",
         },
       })

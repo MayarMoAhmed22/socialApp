@@ -3,6 +3,7 @@ import "./ChangeProfilePhoto.module.css";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 export default function ChangeProfilePhoto() {
   const [isOpen, setisOpen] = useState(false);
 
@@ -16,7 +17,7 @@ export default function ChangeProfilePhoto() {
     axios
       .put(`https://linked-posts.routemisr.com/users/upload-photo`, newData, {
         headers: {
-          token: localStorage.getItem("userToken"),
+          token: Cookies.get("userToken"),
         },
       })
       .then((res) => {

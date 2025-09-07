@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { userContext } from "../../Context/userContext";
 import { useNavigate } from "react-router-dom";
 import z from "zod";
+import Cookies from "js-cookie";
 const schema = z.object({
   email: z.string().email("InValid email"),
   password: z
@@ -35,7 +36,7 @@ export default function Login() {
       .then((res) => {
         if (res.data.message === "success") {
           setloading(false);
-          localStorage.setItem("userToken", res.data.token);
+          Cookies.set("userToken", res.data.token, { expires: 1 });
           setuserLogin(res.data.token);
           navigate("/");
         }

@@ -4,14 +4,14 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Comment from "./../Comment";
-
+import Cookies from "js-cookie";
 export default function PostDetails() {
   const [expanded, setExpanded] = useState(false);
   const { id } = useParams();
 
   function singlePage() {
     return axios.get(`https://linked-posts.routemisr.com/posts/${id}`, {
-      headers: { token: localStorage.getItem("userToken") },
+      headers: { token: Cookies.get("userToken") },
     });
   }
 

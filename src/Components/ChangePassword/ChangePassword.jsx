@@ -3,6 +3,7 @@ import "./ChangePassword.module.css";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Cookies from "js-cookie";
 export default function ChangePassword() {
   const [isOpen, setisOpen] = useState(false);
   function handleTroggle() {
@@ -14,7 +15,7 @@ export default function ChangePassword() {
         `https://linked-posts.routemisr.com/users/change-password`,
         values,
         {
-          headers: { token: localStorage.getItem("userToken") },
+          headers: { token: Cookies.get("userToken") },
         }
       )
       .then((res) => {

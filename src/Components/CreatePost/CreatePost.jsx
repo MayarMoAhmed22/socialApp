@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-
+import Cookies from "js-cookie";
 export default function CreatePost() {
   const form = useForm({
     defaultValues: {
@@ -18,7 +18,6 @@ export default function CreatePost() {
   async function handleCreatePost(values) {
     let myData = new FormData();
 
- 
     if (values.body && values.body.trim() !== "") {
       myData.append("body", values.body);
     }
@@ -26,7 +25,6 @@ export default function CreatePost() {
     if (values.image && values.image.length > 0) {
       myData.append("image", values.image[0]);
     }
-
 
     if (!myData.has("body") && !myData.has("image")) {
       toast.error("You must provide text or an image");
@@ -39,7 +37,7 @@ export default function CreatePost() {
         myData,
         {
           headers: {
-            token: localStorage.getItem("userToken"),
+            token: Cookies.get("userToken"),
           },
         }
       );

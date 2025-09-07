@@ -3,6 +3,7 @@ import EditComment from "./EditComment/EditComment";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 export default function Comment({ comment }) {
   const [openMenu, setOpenMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -21,7 +22,7 @@ export default function Comment({ comment }) {
   function deletePost(postId) {
     axios
       .delete(`https://linked-posts.routemisr.com/comments/${postId}`, {
-        headers: { token: localStorage.getItem("userToken") },
+        headers: { token: Cookies.get("userToken") },
       })
       .then((res) => {
         console.log(res);

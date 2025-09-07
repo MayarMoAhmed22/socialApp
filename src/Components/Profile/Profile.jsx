@@ -5,12 +5,12 @@ import axios from "axios";
 import UserPosts from "../UserPosts/UserPosts";
 import ChangePassword from "../ChangePassword/ChangePassword";
 import ChangeProfilePhoto from "../ChangeProfilePhoto/ChangeProfilePhoto";
-
+import Cookies from "js-cookie";
 export default function Profile() {
   function getUserInfo() {
     return axios.get(`https://linked-posts.routemisr.com/users/profile-data`, {
       headers: {
-        token: localStorage.getItem("userToken"),
+        token:Cookies.get("userToken"),
       },
     });
   }

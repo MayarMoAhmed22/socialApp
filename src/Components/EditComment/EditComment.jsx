@@ -2,6 +2,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 export default function EditComment({ id, onClose }) {
   let queryclient = useQueryClient();
   let { register, handleSubmit } = useForm({
@@ -14,7 +15,7 @@ export default function EditComment({ id, onClose }) {
     axios
       .put(`https://linked-posts.routemisr.com/comments/${id}`, values, {
         headers: {
-          token: localStorage.getItem("userToken"),
+          token: Cookies.get("userToken"),
         },
       })
       .then((res) => {
@@ -23,7 +24,7 @@ export default function EditComment({ id, onClose }) {
         toast.success("Updated successfully");
         onClose(); // close after saving
         queryclient.invalidateQueries({ queryKey: ["userPosts"] });
-        queryclient.invalidateQueries({queryKey:['singlePost']})
+        queryclient.invalidateQueries({ queryKey: ["singlePost"] });
       })
       .catch((err) => {
         console.log(err);
