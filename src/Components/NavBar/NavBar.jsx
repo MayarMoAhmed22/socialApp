@@ -19,13 +19,15 @@ export default function NavBar() {
   function getUserInfo() {
     return axios.get(`https://linked-posts.routemisr.com/users/profile-data`, {
       headers: {
-        token:  Cookies.get("userToken"),
+        token: Cookies.get("userToken"),
       },
     });
   }
   let { data, error, isError } = useQuery({
     queryKey: "userprofile",
     queryFn: getUserInfo,
+    enabled: !!Cookies.get("userToken"),
+    retry: false,
     select: (data) => data?.data?.user,
   });
   console.log(data?.data?.user);

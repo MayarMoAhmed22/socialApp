@@ -36,7 +36,11 @@ export default function Login() {
       .then((res) => {
         if (res.data.message === "success") {
           setloading(false);
-          Cookies.set("userToken", res.data.token, { expires: 1 });
+          Cookies.set("userToken", res.data.token, {
+            expires: 1, // 1 day
+            secure: true, // required on HTTPS (Vercel uses HTTPS)
+            sameSite: "Strict", // or "Lax" depending on your backend
+          });
           setuserLogin(res.data.token);
           navigate("/");
         }
