@@ -3,7 +3,7 @@ import "./AddComment.module.css";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import Cookies from "js-cookie";
 export default function AddComment({ postId }) {
   const [isOpen, setisOpen] = useState(false);
 
@@ -13,14 +13,14 @@ export default function AddComment({ postId }) {
         `https://linked-posts.routemisr.com/comments`,
         values,
         {
-          headers: { token: localStorage.getItem("userToken") },
+          headers: { token: Cookies.get("userToken") },
         }
       );
       console.log(res);
       if (res.data.message === "success") {
         setisOpen(false); // ✅ just close modal
-        toast.success("comment created successfully" ,{
-          style:{backgroundColor:"#520B05", color:"white"}
+        toast.success("comment created successfully", {
+          style: { backgroundColor: "#520B05", color: "white" },
         });
       }
     } catch (err) {
