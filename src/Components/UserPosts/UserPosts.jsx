@@ -36,7 +36,7 @@ export default function UserPosts({ id }) {
   function fetchUserPosts() {
     return axios.get(`https://linked-posts.routemisr.com/users/${id}/posts`, {
       headers: {
-        token: localStorage.getItem("userToken"),
+        token: Cookies.get("userToken"),
       },
     });
   }

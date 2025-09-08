@@ -29,6 +29,13 @@ export default function NavBar() {
     enabled: !!Cookies.get("userToken"),
     retry: false,
     select: (data) => data?.data?.user,
+    onError: (err) => {
+      if (err.response?.status === 401) {
+        Cookies.remove("userToken");
+        setuserLogin(null);
+        navigate("/login");
+      }
+    },
   });
   console.log(data?.data?.user);
 

@@ -55,7 +55,7 @@ export default function CreatePost() {
   function getUserInfo() {
     return axios.get(`https://linked-posts.routemisr.com/users/profile-data`, {
       headers: {
-        token: localStorage.getItem("userToken"),
+       token: Cookies.get("userToken"),
       },
     });
   }
